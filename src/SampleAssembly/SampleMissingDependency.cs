@@ -10,9 +10,6 @@ using System;
 
 namespace SampleAssembly
 {
-	
-	
-
 	/// <summary>
 	/// This class implements a service, however is intended to be derived from to provide
 	/// another constructor signature or explicitly created. It is inteded to have missing 
@@ -34,6 +31,9 @@ namespace SampleAssembly
 			get
 			{
 				return _type.Name;
+			}
+			set
+			{
 			}
 		}
 	}

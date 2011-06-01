@@ -30,12 +30,13 @@ namespace Hiro.Implementations
         /// </summary>
         private readonly Func<PropertyInfo, IDependency> _propertyDependencyResolver;
 
+        private static Func<PropertyInfo, bool> defaultPropertyFilter = p => p.CanWrite && p.PropertyType!=typeof(string) && !p.PropertyType.IsValueType; // && p.PropertyType.IsClass;
         /// <summary>
         /// Initializes a new instance of the PropertyInjector class.
         /// </summary>
         /// <param name="implementation">The target implementation that will instantiate the service type.</param>
-        public PropertyInjectionCall(IStaticImplementation implementation)
-            : this(implementation, p => p.CanWrite, p => new Dependency(p.PropertyType))
+        public PropertyInjectionCall(IStaticImplementation implementation) //HACK removed simple types and strings from injectable services
+        	: this(implementation, defaultPropertyFilter, p => new Dependency(p.PropertyType))
         {
         }
 
@@ -123,7 +124,7 @@ namespace Hiro.Implementations
             _implementation.Emit(dependency, serviceMap, targetMethod);
 
             // Determine the properties that need injection
-            Func<PropertyInfo, bool> propertyFilter = p => _propertyFilter(p) && _propertyDependencyResolver(p) != null && p.CanWrite;
+            Func<PropertyInfo, bool> propertyFilter = p => _propertyFilter(p) && _propertyDependencyResolver(p) != null && defaultPropertyFilter(p); //&& p.CanWrite && !p.PropertyType.IsValueType && p.PropertyType !=typeof(string);
             var targetProperties = TargetType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             foreach (var property in targetProperties)
@@ -150,6 +151,8 @@ namespace Hiro.Implementations
         /// <param name="curentDependency">The <see cref="IDependency"/> that describes the service instance that will be assigned to the target property.</param>
         private static void EmitPropertySetter(IDictionary<IDependency, IImplementation> serviceMap, MethodDefinition targetMethod, ModuleDefinition module, ILProcessor il, PropertyInfo property, IDependency curentDependency)
         {
+            var setterMethod = property.GetSetMethod();
+            if(setterMethod==null) return;
             // Push the target onto the stack
             il.Emit(OpCodes.Dup);
 
@@ -158,7 +161,6 @@ namespace Hiro.Implementations
             propertyValueImplementation.Emit(curentDependency, serviceMap, targetMethod);
 
             // Call the setter
-            var setterMethod = property.GetSetMethod();
             var setter = module.Import(setterMethod);
 
             var callInstruction = setterMethod.IsVirtual ? il.Create(OpCodes.Callvirt, setter) : il.Create(OpCodes.Call, setter);

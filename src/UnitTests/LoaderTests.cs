@@ -188,7 +188,9 @@ namespace Hiro.UnitTests
         [Test]
         public void ShouldBeAbleToFilterLoadedServicesUsingASinglePredicate()
         {
-            Predicate<IServiceInfo> serviceFilter = service => service.ServiceType != typeof(IVehicle);
+            Predicate<IServiceInfo> serviceFilter = 
+            	service => 
+            	service.ServiceType != typeof(IVehicle);
 
             var loader = new DependencyMapLoader();
             loader.ServiceFilter = serviceFilter;

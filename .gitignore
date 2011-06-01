@@ -6,3 +6,4 @@ build
 src/Hiro-vs2008/*
 *.sdps
 *.log
+*.cache

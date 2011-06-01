@@ -1,0 +1,5 @@
+.git
+.svn
+_git
+_svn
+

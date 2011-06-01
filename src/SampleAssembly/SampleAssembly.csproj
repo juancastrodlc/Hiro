@@ -51,7 +51,9 @@
   <ItemGroup>
     <Compile Include="BazImplementations.cs" />
     <Compile Include="Delegates.cs" />
+    <Compile Include="IFalseDependency.cs" />
     <Compile Include="IMissing.cs" />
+    <Compile Include="SampleFalseDependency.cs" />
     <Compile Include="SampleMissingDependency.cs" />
     <Compile Include="DbConTest.cs" />
     <Compile Include="IBaz.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="SampleClassWithEnumerableBazDependency.cs" />
     <Compile Include="SampleFactory.cs" />
     <Compile Include="SampleGenericImplementation.cs" />
+    <Compile Include="SomeService.cs" />
     <Compile Include="TestRepository.cs" />
   </ItemGroup>
   <ItemGroup>

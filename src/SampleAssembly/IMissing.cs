@@ -11,10 +11,10 @@ using System;
 namespace SampleAssembly
 {
 	/// <summary>
-	/// This interface is supposed to be implemented in a 'destination' assembly different from this one
+	/// This interface is supposed to be instantiated or implemented in a 'destination' assembly different from this one
 	/// </summary>
 	public interface IMissing
 	{
-		string TypeName{ get;}
+		string TypeName{ get; } // when i mark it writable it becomes an uninteded dependency
 	}
 }

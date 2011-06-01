@@ -23,7 +23,7 @@ namespace Hiro.Implementations
 
             // HACK: Ignore primitive types by default
             var serviceType = dependency.ServiceType;
-            if (serviceType.IsValueType)
+            if (serviceType.IsValueType || serviceType==typeof(string))
                 return originalImplementation;
 
             // Property injection can only be performend on early-bound instantiations

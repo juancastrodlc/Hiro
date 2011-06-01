@@ -93,7 +93,36 @@ namespace Hiro.UnitTests.BugFixes
             var container = map.CreateContainer();
             var result = container.GetInstance<IMissing>();
             
-            Assert.IsNull(result);
+            Assert.IsNull(result,"The container created an incomplete instance");
+        }
+        
+       	[Test]
+		public void should_create_either_both_empty_or_both_equivalent_and_not_null()
+		{
+			var map1 = new DependencyMapLoader().LoadFrom(typeof(ISomeService).Assembly);
+			var container1 = map1.CreateContainer();
+			var service1 = container1.GetInstance<ISomeService>();
+
+			var map2 = new DependencyMap();			
+			map2.AddService<ISomeService,SomeService>();			
+			var container2 = map2.CreateContainer();
+			var service2 = container2.GetInstance<ISomeService>();			
+			
+			Assert.IsFalse(service2==null||service1==null,"At least one service is null 1:{0} 2:{1}",service1,service2);
+			Assert.AreEqual(service1.GetType(),service2.GetType(),"types are not the same");
+		}
+        
+        [Test]
+        public void ShouldBeAbleToGetAServiceThatImplementsSimpleProperties()
+        {
+        	var loader = new DependencyMapLoader();
+            var map = loader.LoadFromBaseDirectory("SampleAssembly.dll");
+            //var map = new DependencyMap();
+            //map.AddService<IFalseDependency>(x=>new SampleFalseDependency());
+            var container = map.CreateContainer();
+            var result = container.GetInstance<IFalseDependency>();
+            
+            Assert.IsNotNull(result,"The container did not create IFalseDependency instance");        	
         }
 
         [Test]
